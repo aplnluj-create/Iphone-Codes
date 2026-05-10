@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paisa">
+<meta name="theme-color" content="#0a0a0a">
+<title>Paisa</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230a0a0a'/%3E%3Ctext x='90' y='128' font-family='Georgia,serif' font-size='110' font-weight='700' fill='%23d4af37' text-anchor='middle'%3E₹%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Palette — warm dark, gold accent, restraint */
+  --bg: #0a0908;
+  --bg-elev: #131210;
+  --bg-elev2: #1a1816;
+  --bg-card: #161413;
+  --line: #26221e;
+  --line-strong: #3a342e;
+
+  --ink: #f5f1ea;
+  --ink-2: #b5ada0;
+  --ink-3: #6e665c;
+  --ink-4: #3f3a34;
+
+  --gold: #d4af37;
+  --gold-soft: #b8961d;
+  --gold-bg: rgba(212,175,55,0.10);
+
+  --green: #6db380;
+  --green-bg: rgba(109,179,128,0.10);
+  --red: #d97070;
+  --red-bg: rgba(217,112,112,0.10);
+  --amber: #d4a64a;
+  --amber-bg: rgba(212,166,74,0.10);
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  --st: env(safe-area-inset-top, 47px);
+  --sb: env(safe-area-inset-bottom, 34px);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212,175,55,0.08), transparent 70%),
+    var(--bg);
+}
+
+/* Hide scrollbars everywhere */
+::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; -ms-overflow-style: none; }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input { font-family: inherit; -webkit-appearance: none; }
+
+/* ───────── APP SHELL ───────── */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ───────── STATUS / HEADER ───────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: calc(var(--st) + 14px) 22px 14px;
+  background: rgba(10,9,8,0.72);
+  backdrop-filter: saturate(140%) blur(24px);
+  -webkit-backdrop-filter: saturate(140%) blur(24px);
+  border-bottom: 0.5px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--bg);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.15) inset, 0 4px 12px rgba(212,175,55,0.25);
+}
+
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.3px;
+}
+
+.hdr-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  color: var(--ink-2);
+  transition: transform 0.15s var(--ease-out), background 0.15s;
+}
+.icon-btn:active { transform: scale(0.92); background: var(--bg-elev2); }
+
+/* ───────── SEGMENTED CONTROL ───────── */
+.seg-wrap {
+  padding: 12px 22px 6px;
+  background: var(--bg);
+  position: sticky;
+  top: calc(var(--st) + 60px);
+  z-index: 25;
+}
+
+.seg {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: 12px;
+  padding: 3px;
+  position: relative;
+}
+
+.seg-item {
+  padding: 9px 4px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  text-align: center;
+  border-radius: 9px;
+  position: relative;
+  z-index: 2;
+  transition: color 0.25s var(--ease-out);
+}
+
+.seg-item.active { color: var(--bg); }
+
+.seg-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  background: var(--gold);
+  border-radius: 9px;
+  transition: transform 0.4s var(--ease-out), width 0.4s var(--ease-out);
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(212,175,55,0.25);
+}
+
+/* ───────── CONTENT ───────── */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: calc(var(--sb) + 100px);
+  scroll-behavior: smooth;
+}
+
+/* ───────── MONTH PICKER ───────── */
+.month-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 22px 8px;
+}
+
+.month-arrow {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3);
+  font-size: 14px;
+  transition: color 0.15s, background 0.15s, transform 0.1s;
+}
+.month-arrow:active { background: var(--bg-elev); transform: scale(0.9); color: var(--ink); }
+.month-arrow:disabled { opacity: 0.3; pointer-events: none; }
+
+.month-label {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.2px;
+}
+
+.month-label.this {
+  position: relative;
+}
+
+.month-label.this::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* ───────── HERO BALANCE ───────── */
+.hero {
+  margin: 4px 22px 0;
+  padding: 28px 24px 22px;
+  background:
+    radial-gradient(ellipse 100% 80% at 0% 0%, rgba(212,175,55,0.08), transparent 60%),
+    var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 30%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.hero-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.hero-amount {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 44px;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.hero-amount .currency {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink-2);
+  margin-right: 2px;
+}
+
+.hero-amount .decimals {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin-left: 2px;
+}
+
+.hero-amount.neg { color: var(--red); }
+.hero-amount.neg .currency, .hero-amount.neg .decimals { color: var(--red); opacity: 0.7; }
+
+.hero-trend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.hero-trend .arr {
+  font-size: 10px;
+}
+.hero-trend.up .arr, .hero-trend.up .pct { color: var(--green); }
+.hero-trend.down .arr, .hero-trend.down .pct { color: var(--red); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  margin-top: 22px;
+  background: var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.hero-cell {
+  background: var(--bg-elev);
+  padding: 12px 14px 12px;
+}
+
+.hero-cell-lbl {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.hero-cell-val {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.hero-cell-val.g { color: var(--green); }
+.hero-cell-val.r { color: var(--red); }
+
+/* ───────── BUDGET METER ───────── */
+.budget-card {
+  margin: 14px 22px 0;
+  padding: 18px 20px;
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-lg);
+}
+
+.budget-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.budget-title {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.budget-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+}
+
+.budget-amount .spent { color: var(--ink); font-weight: 600; }
+.budget-amount .of { color: var(--ink-3); margin: 0 4px; }
+.budget-amount .total { color: var(--ink-2); }
+
+.budget-bar {
+  height: 8px;
+  background: var(--bg-elev2);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.budget-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green) 0%, var(--green) 100%);
+  border-radius: 99px;
+  transition: width 0.8s var(--ease-out), background 0.4s;
+  position: relative;
+}
+
+.budget-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+  border-radius: inherit;
+}
+
+.budget-fill.warn { background: linear-gradient(90deg, var(--green) 0%, var(--amber) 100%); }
+.budget-fill.danger { background: linear-gradient(90deg, var(--amber) 0%, var(--red) 100%); }
+
+.budget-foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.budget-foot .left { color: var(--ink-3); }
+.budget-foot .right { color: var(--ink-2); font-weight: 500; }
+
+/* ───────── EMPTY BUDGET STATE ───────── */
+.budget-empty {
+  margin: 14px 22px 0;
+  padding: 18px 20px;
+  background: var(--bg-elev);
+  border: 0.5px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.budget-empty:active { background: var(--bg-elev2); }
+
+.budget-empty-info { flex: 1; }
+.budget-empty-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
+.budget-empty-sub { font-size: 11px; color: var(--ink-3); }
+
+.budget-empty-cta {
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ───────── SECTION HEADER ───────── */
+.section {
+  padding: 24px 22px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.section-link {
+  font-size: 12px;
+  color: var(--gold);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.section-link:active { opacity: 0.7; }
+
+/* ───────── TRANSACTION LIST ───────── */
+.tx-list {
+  padding: 0 22px;
+}
+
+.tx-day-group {
+  margin-bottom: 18px;
+  animation: fadeInUp 0.3s var(--ease-out);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tx-day-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+  padding: 0 4px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tx-day-total {
+  color: var(--ink-3);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0;
+}
+
+.tx-day-list {
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.tx-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid var(--line);
+  transition: background 0.15s;
+  position: relative;
+}
+
+.tx-row:last-child { border-bottom: none; }
+.tx-row:active { background: var(--bg-elev2); }
+
+.tx-icon {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.tx-icon.exp { background: var(--bg-elev2); border: 0.5px solid var(--line-strong); }
+.tx-icon.inc {
+  background: var(--gold-bg);
+  border: 0.5px solid rgba(212,175,55,0.25);
+}
+.tx-icon.inc::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border: 1.5px solid var(--bg-elev);
+  border-radius: 50%;
+}
+
+.tx-body { flex: 1; min-width: 0; }
+.tx-name {
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink);
+}
+.tx-meta {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tx-amt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+  flex-shrink: 0;
+  letter-spacing: -0.3px;
+}
+.tx-amt.exp { color: var(--ink); }
+.tx-amt.inc { color: var(--green); }
+
+/* ───────── EMPTY STATES ───────── */
+.empty {
+  text-align: center;
+  padding: 48px 32px;
+  color: var(--ink-3);
+}
+
+.empty-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 14px;
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+
+.empty-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.empty-sub { font-size: 12px; line-height: 1.5; }
+
+/* ───────── INSIGHTS ───────── */
+.insights {
+  padding: 16px 22px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.metric {
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-lbl {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.metric-val {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  line-height: 1;
+}
+
+.metric-sub { font-size: 11px; color: var(--ink-3); margin-top: 6px; }
+
+.metric .ring {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  width: 80px; height: 80px;
+  opacity: 0.15;
+}
+
+.cat-card {
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+}
+
+.cat-card-head {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.cat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.cat-row:not(:last-child) { border-bottom: 0.5px solid var(--line); padding-bottom: 12px; margin-bottom: 4px; }
+
+.cat-emoji {
+  width: 32px; height: 32px;
+  background: var(--bg-elev2);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.cat-info { flex: 1; min-width: 0; }
+
+.cat-line1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.cat-name { font-size: 13.5px; font-weight: 500; }
+.cat-amt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+
+.cat-line2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cat-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-elev2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cat-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 99px;
+  transition: width 0.8s var(--ease-out);
+}
+.cat-fill.income { background: var(--green); }
+
+.cat-pct { font-size: 10.5px; color: var(--ink-3); min-width: 32px; text-align: right; font-family: 'JetBrains Mono', monospace; }
+
+/* ───────── SETTINGS ───────── */
+.settings {
+  padding: 16px 22px 0;
+}
+
+.set-group {
+  margin-bottom: 24px;
+}
+
+.set-group-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 0 4px 8px;
+  font-weight: 600;
+}
+
+.set-card {
+  background: var(--bg-elev);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 0.5px solid var(--line);
+  gap: 12px;
+  min-height: 56px;
+}
+
+.set-row:last-child { border-bottom: none; }
+
+.set-row-lbl { font-size: 14px; font-weight: 500; }
+.set-row-sub { font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+.set-input {
+  background: var(--bg-elev2);
+  border: 0.5px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 12px;
+  color: var(--ink);
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  text-align: right;
+  width: 130px;
+  transition: border-color 0.2s;
+}
+.set-input:focus { border-color: var(--gold); }
+.set-input.text { font-family: 'Inter Tight', sans-serif; text-align: left; }
+
+.set-row.danger { color: var(--red); }
+.set-row.danger:active { background: var(--red-bg); }
+.set-row.action {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.set-row.action:active { background: var(--bg-elev2); }
+.set-chevron { color: var(--ink-3); font-size: 13px; }
+
+.save-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: var(--r-md);
+  margin-top: 8px;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 16px rgba(212,175,55,0.25);
+}
+.save-btn:active { opacity: 0.85; transform: scale(0.98); }
+
+/* ───────── FAB ───────── */
+.fab {
+  position: fixed;
+  bottom: calc(var(--sb) + 22px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  font-weight: 300;
+  z-index: 40;
+  box-shadow:
+    0 8px 24px rgba(212,175,55,0.4),
+    0 2px 8px rgba(0,0,0,0.4),
+    0 0 0 0.5px rgba(255,255,255,0.1) inset;
+  transition: transform 0.2s var(--ease-spring);
+}
+.fab:active { transform: translateX(-50%) scale(0.92); }
+
+@media (max-width: 480px) {
+  .fab { left: auto; right: 22px; transform: none; }
+  .fab:active { transform: scale(0.92); }
+}
+
+.fab::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* ───────── SHEET MODAL ───────── */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.3s var(--ease-out);
+}
+.scrim.open { opacity: 1; pointer-events: all; }
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-elev);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  border-top: 0.5px solid var(--line);
+  z-index: 60;
+  transition: transform 0.4s var(--ease-out);
+  max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+}
+.sheet.open { transform: translateX(-50%) translateY(0); }
+
+.sheet-handle {
+  width: 36px; height: 5px;
+  background: var(--line-strong);
+  border-radius: 99px;
+  margin: 8px auto 0;
+  flex-shrink: 0;
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px 8px;
+  flex-shrink: 0;
+}
+
+.sheet-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+
+.sheet-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bg-elev2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.sheet-close:active { background: var(--line); transform: scale(0.92); }
+
+.sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 22px calc(var(--sb) + 22px);
+}
+
+/* ───────── ENTRY FORM ───────── */
+.amt-display {
+  margin: 8px 0 22px;
+  padding: 18px 0;
+  text-align: center;
+  border-bottom: 0.5px solid var(--line);
+}
+
+.amt-display-lbl {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.amt-input-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.amt-currency {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.amt-input {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 56px;
+  color: var(--ink);
+  text-align: center;
+  width: 60%;
+  max-width: 280px;
+  letter-spacing: -2px;
+  caret-color: var(--gold);
+}
+.amt-input::placeholder { color: var(--ink-4); }
+
+/* Type toggle pill */
+.type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-elev2);
+  border: 0.5px solid var(--line);
+  border-radius: 12px;
+  padding: 3px;
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.type-pill {
+  padding: 11px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 9px;
+  z-index: 2;
+  position: relative;
+  color: var(--ink-3);
+  transition: color 0.25s var(--ease-out);
+}
+
+.type-pill.active { color: var(--bg); }
+
+.type-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: calc(50% - 3px);
+  border-radius: 9px;
+  z-index: 1;
+  transition: transform 0.35s var(--ease-out), background 0.25s;
+}
+.type-indicator.exp {
+  transform: translateX(0);
+  background: var(--red);
+}
+.type-indicator.inc {
+  transform: translateX(100%);
+  background: var(--green);
+}
+
+/* Form fields */
+.field {
+  margin-bottom: 14px;
+}
+
+.field-lbl {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+  font-weight: 500;
+  display: block;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--bg-elev2);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 13px 14px;
+  color: var(--ink);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--gold); }
+.field-input::placeholder { color: var(--ink-4); }
+
+input[type="date"].field-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color-scheme: dark;
+}
+
+/* Category grid */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.cat-pick {
+  background: var(--bg-elev2);
+  border: 0.5px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s var(--ease-out);
+  position: relative;
+}
+
+.cat-pick.selected {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+}
+
+.cat-pick:active { transform: scale(0.95); }
+
+.cat-pick-em { font-size: 22px; }
+.cat-pick-lbl {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ink-3);
+  text-align: center;
+  line-height: 1.1;
+}
+.cat-pick.selected .cat-pick-lbl { color: var(--gold); }
+
+/* Submit */
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 15.5px;
+  border-radius: var(--r-md);
+  margin-top: 18px;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 16px rgba(212,175,55,0.25);
+}
+.submit-btn:active { opacity: 0.85; transform: scale(0.98); }
+
+.delete-btn {
+  width: 100%;
+  padding: 13px;
+  color: var(--red);
+  font-size: 13.5px;
+  font-weight: 500;
+  border-radius: var(--r-md);
+  margin-top: 8px;
+  border: 0.5px solid var(--line);
+  transition: background 0.15s;
+}
+.delete-btn:active { background: var(--red-bg); }
+
+/* ───────── TOAST ───────── */
+.toast {
+  position: fixed;
+  top: calc(var(--st) + 70px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 11px 18px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ───────── SHIMMER ───────── */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Highlight pulse for fresh entry */
+@keyframes pulse {
+  0% { background: var(--gold-bg); }
+  100% { background: transparent; }
+}
+.tx-row.fresh { animation: pulse 1.4s var(--ease-out); }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-mark">₹</div>
+      <div class="brand-name" id="brandName">Paisa</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="icon-btn" onclick="setTab('settings')" aria-label="Settings">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SEGMENTED -->
+  <div class="seg-wrap">
+    <div class="seg" id="seg">
+      <div class="seg-indicator" id="segInd"></div>
+      <div class="seg-item active" data-tab="overview" onclick="setTab('overview')">Overview</div>
+      <div class="seg-item" data-tab="transactions" onclick="setTab('transactions')">Activity</div>
+      <div class="seg-item" data-tab="insights" onclick="setTab('insights')">Insights</div>
+      <div class="seg-item" data-tab="settings" onclick="setTab('settings')">Settings</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="content"></div>
+
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openAdd()" aria-label="Add entry">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<!-- SCRIM + SHEET -->
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <div class="sheet-title" id="sheetTitle">New Entry</div>
+    <button class="sheet-close" onclick="closeSheet()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="sheet-body">
+
+    <input type="hidden" id="editId">
+
+    <div class="amt-display">
+      <div class="amt-display-lbl">Amount</div>
+      <div class="amt-input-wrap">
+        <span class="amt-currency" id="amtCur">₹</span>
+        <input class="amt-input" id="fAmt" type="number" inputmode="decimal" placeholder="0" min="0" step="0.01">
+      </div>
+    </div>
+
+    <div class="type-toggle">
+      <div class="type-indicator exp" id="typeInd"></div>
+      <div class="type-pill active" id="pillE" onclick="setType('expense')">Expense</div>
+      <div class="type-pill" id="pillI" onclick="setType('income')">Income</div>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl">Description</label>
+      <input class="field-input" type="text" id="fDesc" placeholder="What's this for?">
+    </div>
+
+    <div class="field">
+      <label class="field-lbl">Category</label>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl">Date</label>
+      <input class="field-input" type="date" id="fDate">
+    </div>
+
+    <div class="field">
+      <label class="field-lbl">Notes</label>
+      <input class="field-input" type="text" id="fNotes" placeholder="Optional">
+    </div>
+
+    <button class="submit-btn" onclick="saveEntry()" id="submitBtn">Add Entry</button>
+    <button class="delete-btn" id="deleteBtn" style="display:none" onclick="deleteEntry()">Delete</button>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════════════
+const EXP = [
+  {id:'food',     l:'Food',       e:'🍽️'},
+  {id:'grocery',  l:'Groceries',  e:'🛒'},
+  {id:'rent',     l:'Rent',       e:'🏠'},
+  {id:'transport',l:'Travel',     e:'🚕'},
+  {id:'fuel',     l:'Fuel',       e:'⛽'},
+  {id:'health',   l:'Health',     e:'💊'},
+  {id:'shopping', l:'Shopping',   e:'🛍️'},
+  {id:'bills',    l:'Bills',      e:'📄'},
+  {id:'emi',      l:'EMI',        e:'🏦'},
+  {id:'education',l:'Education',  e:'📚'},
+  {id:'ent',      l:'Entertain',  e:'🎬'},
+  {id:'subs',     l:'Subscript',  e:'📱'},
+  {id:'personal', l:'Personal',   e:'✨'},
+  {id:'gifts',    l:'Gifts',      e:'🎁'},
+  {id:'savings',  l:'Savings',    e:'💰'},
+  {id:'other',    l:'Other',      e:'📌'},
+];
+
+const INC = [
+  {id:'salary',   l:'Salary',     e:'💼'},
+  {id:'freelance',l:'Freelance',  e:'💻'},
+  {id:'business', l:'Business',   e:'📊'},
+  {id:'invest',   l:'Returns',    e:'📈'},
+  {id:'rental',   l:'Rental',     e:'🏘️'},
+  {id:'gift_in',  l:'Gift',       e:'🎀'},
+  {id:'refund',   l:'Refund',     e:'↩️'},
+  {id:'other_in', l:'Other',      e:'✦'},
+];
+
+const getCat = id => [...EXP, ...INC].find(c => c.id === id) || {e:'📌', l:id};
+
+// ════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════
+const load = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const persist = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+let txs = load('paisa_txs_v3', []);
+let cfg = load('paisa_cfg_v3', { name:'Paisa', startBalance:0, monthlyLimit:0, currency:'₹' });
+
+let activeTab = 'overview';
+let cType = 'expense';
+let cCat = 'food';
+let lastTxId = null;
+
+const now = new Date();
+let vMonth = now.getMonth();
+let vYear = now.getFullYear();
+
+// ════════════════════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════════════════════
+function formatINR(n) {
+  const abs = Math.abs(n);
+  return new Intl.NumberFormat('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(abs);
+}
+
+function fmtFull(n) { return (cfg.currency || '₹') + formatINR(n); }
+
+function fmtSplit(n) {
+  const abs = Math.abs(n);
+  const intPart = Math.floor(abs);
+  const decPart = Math.round((abs - intPart) * 100);
+  const intStr = new Intl.NumberFormat('en-IN').format(intPart);
+  return { int: intStr, dec: decPart > 0 ? '.' + String(decPart).padStart(2, '0') : '' };
+}
+
+function monthLabel(m, y) {
+  return new Date(y, m, 1).toLocaleDateString('en-IN', { month:'long', year:'numeric' });
+}
+
+function isThisMonth(m, y) {
+  return m === now.getMonth() && y === now.getFullYear();
+}
+
+function inViewMonth(d) {
+  const x = new Date(d);
+  return x.getMonth() === vMonth && x.getFullYear() === vYear;
+}
+
+function viewTxs() { return txs.filter(t => inViewMonth(t.date)); }
+
+function prevMonthDate() {
+  const m = vMonth === 0 ? 11 : vMonth - 1;
+  const y = vMonth === 0 ? vYear - 1 : vYear;
+  return { m, y };
+}
+
+function stats(m = vMonth, y = vYear) {
+  const list = txs.filter(t => {
+    const x = new Date(t.date);
+    return x.getMonth() === m && x.getFullYear() === y;
+  });
+  const inc = list.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+  const exp = list.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+  const start = parseFloat(cfg.startBalance) || 0;
+  return { inc, exp, list, start, bal: start + inc - exp };
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function haptic() { if (navigator.vibrate) navigator.vibrate(8); }
+
+// ════════════════════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════════════════════
+function setTab(name) {
+  activeTab = name;
+  document.querySelectorAll('.seg-item').forEach((el, i) => {
+    const isActive = el.dataset.tab === name;
+    el.classList.toggle('active', isActive);
+    if (isActive) {
+      const ind = document.getElementById('segInd');
+      const r = el.getBoundingClientRect();
+      const segR = el.parentElement.getBoundingClientRect();
+      ind.style.transform = `translateX(${r.left - segR.left - 3}px)`;
+      ind.style.width = (r.width) + 'px';
+    }
+  });
+  haptic();
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+// Position indicator on init
+function initSegIndicator() {
+  setTimeout(() => {
+    const active = document.querySelector('.seg-item.active');
+    if (active) {
+      const ind = document.getElementById('segInd');
+      const r = active.getBoundingClientRect();
+      const segR = active.parentElement.getBoundingClientRect();
+      ind.style.transform = `translateX(${r.left - segR.left - 3}px)`;
+      ind.style.width = r.width + 'px';
+    }
+  }, 50);
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER ROUTER
+// ════════════════════════════════════════════════════════════════
+function render() {
+  document.getElementById('brandName').textContent = cfg.name || 'Paisa';
+  document.getElementById('amtCur').textContent = cfg.currency || '₹';
+  const c = document.getElementById('content');
+  if (activeTab === 'overview') renderOverview(c);
+  else if (activeTab === 'transactions') renderActivity(c);
+  else if (activeTab === 'insights') renderInsights(c);
+  else renderSettings(c);
+}
+
+// ════════════════════════════════════════════════════════════════
+// MONTH NAV (shared)
+// ════════════════════════════════════════════════════════════════
+function monthNavHTML() {
+  const isNow = isThisMonth(vMonth, vYear);
+  const future = (vYear > now.getFullYear()) || (vYear === now.getFullYear() && vMonth >= now.getMonth());
+  return `
+    <div class="month-row">
+      <button class="month-arrow" onclick="shiftMonth(-1)" aria-label="Previous month">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="month-label ${isNow ? 'this' : ''}">${monthLabel(vMonth, vYear)}</div>
+      <button class="month-arrow" onclick="shiftMonth(1)" ${future ? 'disabled' : ''} aria-label="Next month">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>`;
+}
+
+function shiftMonth(dir) {
+  const future = (vYear > now.getFullYear()) || (vYear === now.getFullYear() && vMonth >= now.getMonth());
+  if (dir > 0 && future) return;
+  vMonth += dir;
+  if (vMonth > 11) { vMonth = 0; vYear++; }
+  if (vMonth < 0) { vMonth = 11; vYear--; }
+  haptic();
+  render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// OVERVIEW
+// ════════════════════════════════════════════════════════════════
+function renderOverview(c) {
+  const { inc, exp, bal, start, list } = stats();
+  const lim = parseFloat(cfg.monthlyLimit) || 0;
+  const pct = lim > 0 ? Math.min((exp / lim) * 100, 100) : 0;
+  const fillCls = pct >= 90 ? 'danger' : pct >= 70 ? 'warn' : '';
+  const remaining = lim > 0 ? lim - exp : 0;
+
+  // Trend vs prev month
+  const prev = prevMonthDate();
+  const prevS = stats(prev.m, prev.y);
+  let trendHTML = '';
+  if (prevS.exp > 0) {
+    const diff = exp - prevS.exp;
+    const pctChange = (diff / prevS.exp) * 100;
+    const dir = diff > 0 ? 'down' : 'up'; // spending up = bad
+    const arrow = diff > 0 ? '↑' : '↓';
+    trendHTML = `<div class="hero-trend ${dir}"><span class="arr">${arrow}</span><span class="pct">${Math.abs(pctChange).toFixed(0)}%</span> vs last month</div>`;
+  }
+
+  const split = fmtSplit(bal);
+
+  // Recent — group by day, take last 8
+  const sorted = [...list].sort((a,b) => new Date(b.date) - new Date(a.date));
+  const recentSlice = sorted.slice(0, 8);
+
+  c.innerHTML = `
+    ${monthNavHTML()}
+
+    <div class="hero">
+      <div class="hero-label">Net Balance</div>
+      <div class="hero-amount ${bal < 0 ? 'neg' : ''}">
+        <span class="currency">${cfg.currency || '₹'}</span>
+        <span>${bal < 0 ? '−' : ''}${split.int}</span>
+        <span class="decimals">${split.dec}</span>
+      </div>
+      ${trendHTML}
+      <div class="hero-grid">
+        <div class="hero-cell">
+          <div class="hero-cell-lbl">Opening</div>
+          <div class="hero-cell-val">${fmtFull(start)}</div>
+        </div>
+        <div class="hero-cell">
+          <div class="hero-cell-lbl">Income</div>
+          <div class="hero-cell-val g">+${fmtFull(inc)}</div>
+        </div>
+        <div class="hero-cell">
+          <div class="hero-cell-lbl">Spent</div>
+          <div class="hero-cell-val r">−${fmtFull(exp)}</div>
+        </div>
+      </div>
+    </div>
+
+    ${lim > 0 ? `
+      <div class="budget-card">
+        <div class="budget-head">
+          <div class="budget-title">Monthly Budget</div>
+          <div class="budget-amount">
+            <span class="spent">${fmtFull(exp)}</span>
+            <span class="of">of</span>
+            <span class="total">${fmtFull(lim)}</span>
+          </div>
+        </div>
+        <div class="budget-bar">
+          <div class="budget-fill ${fillCls}" style="width:${pct}%"></div>
+        </div>
+        <div class="budget-foot">
+          <div class="left">${pct.toFixed(0)}% used</div>
+          <div class="right" style="color: ${remaining < 0 ? 'var(--red)' : 'var(--ink-2)'}">${remaining < 0 ? 'Over by ' : ''}${fmtFull(remaining)} ${remaining >= 0 ? 'left' : ''}</div>
+        </div>
+      </div>
+    ` : `
+      <div class="budget-empty" onclick="setTab('settings')">
+        <div class="budget-empty-info">
+          <div class="budget-empty-title">Set a monthly budget</div>
+          <div class="budget-empty-sub">Track spending against a limit</div>
+        </div>
+        <div class="budget-empty-cta">Set →</div>
+      </div>
+    `}
+
+    <div class="section">
+      <div class="section-title">Recent Activity</div>
+      ${list.length > 8 ? `<button class="section-link" onclick="setTab('transactions')">View all</button>` : ''}
+    </div>
+
+    ${recentSlice.length === 0 ? emptyHTML('No activity yet', 'Tap the + button to add your first entry') : renderTxGrouped(recentSlice)}
+  `;
+}
+
+// ════════════════════════════════════════════════════════════════
+// ACTIVITY (full transactions)
+// ════════════════════════════════════════════════════════════════
+function renderActivity(c) {
+  const list = [...viewTxs()].sort((a,b) => new Date(b.date) - new Date(a.date));
+  c.innerHTML = `
+    ${monthNavHTML()}
+    <div class="section">
+      <div class="section-title">${list.length} ${list.length === 1 ? 'Entry' : 'Entries'}</div>
+    </div>
+    ${list.length === 0 ? emptyHTML('Nothing here', 'No entries logged for this month') : renderTxGrouped(list)}
+  `;
+}
+
+function renderTxGrouped(list) {
+  // Group by date string (YYYY-MM-DD)
+  const groups = {};
+  list.forEach(t => {
+    const key = t.date.slice(0, 10);
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(t);
+  });
+  const keys = Object.keys(groups).sort((a,b) => b.localeCompare(a));
+
+  return `<div class="tx-list">${keys.map(key => {
+    const items = groups[key];
+    const dayDate = new Date(key);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const yest = new Date(today); yest.setDate(today.getDate() - 1);
+    let dayLabel;
+    if (dayDate.toDateString() === today.toDateString()) dayLabel = 'Today';
+    else if (dayDate.toDateString() === yest.toDateString()) dayLabel = 'Yesterday';
+    else dayLabel = dayDate.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' });
+
+    const dayNet = items.reduce((s,t) => t.type === 'income' ? s + t.amount : s - t.amount, 0);
+
+    return `
+      <div class="tx-day-group">
+        <div class="tx-day-label">
+          <span>${dayLabel}</span>
+          <span class="tx-day-total">${dayNet >= 0 ? '+' : '−'}${fmtFull(dayNet)}</span>
+        </div>
+        <div class="tx-day-list">
+          ${items.map(t => txRowHTML(t)).join('')}
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+}
+
+function txRowHTML(t) {
+  const cat = getCat(t.category);
+  const isFresh = t.id === lastTxId;
+  return `
+    <div class="tx-row ${isFresh ? 'fresh' : ''}" onclick="openEdit('${t.id}')">
+      <div class="tx-icon ${t.type === 'income' ? 'inc' : 'exp'}">${cat.e}</div>
+      <div class="tx-body">
+        <div class="tx-name">${t.desc || cat.l}</div>
+        <div class="tx-meta">${cat.l}${t.notes ? ' · ' + t.notes : ''}</div>
+      </div>
+      <div class="tx-amt ${t.type === 'income' ? 'inc' : 'exp'}">${t.type === 'income' ? '+' : '−'}${fmtFull(t.amount)}</div>
+    </div>`;
+}
+
+function emptyHTML(title, sub) {
+  return `
+    <div class="empty">
+      <div class="empty-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="empty-title">${title}</div>
+      <div class="empty-sub">${sub}</div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// INSIGHTS
+// ════════════════════════════════════════════════════════════════
+function renderInsights(c) {
+  const { inc, exp, list } = stats();
+  const expTxs = list.filter(t => t.type === 'expense');
+  const incTxs = list.filter(t => t.type === 'income');
+
+  const byE = {};
+  expTxs.forEach(t => { byE[t.category] = (byE[t.category] || 0) + t.amount; });
+  const topE = Object.entries(byE).sort((a,b) => b[1] - a[1]);
+
+  const byI = {};
+  incTxs.forEach(t => { byI[t.category] = (byI[t.category] || 0) + t.amount; });
+  const topI = Object.entries(byI).sort((a,b) => b[1] - a[1]);
+
+  const days = new Date(vYear, vMonth + 1, 0).getDate();
+  const dayOfMonth = isThisMonth(vMonth, vYear) ? now.getDate() : days;
+  const avgDay = dayOfMonth > 0 ? exp / dayOfMonth : 0;
+  const sr = inc > 0 ? ((inc - exp) / inc * 100) : 0;
+  const ratio = inc > 0 ? (exp / inc * 100) : 0;
+  const projected = avgDay * days;
+
+  const srColor = sr >= 30 ? 'var(--green)' : sr >= 10 ? 'var(--amber)' : 'var(--red)';
+
+  c.innerHTML = `
+    ${monthNavHTML()}
+    <div class="insights">
+
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-lbl">Savings Rate</div>
+          <div class="metric-val" style="color:${srColor}">${sr.toFixed(0)}%</div>
+          <div class="metric-sub">Of income kept</div>
+        </div>
+        <div class="metric">
+          <div class="metric-lbl">Daily Avg</div>
+          <div class="metric-val">${fmtFull(avgDay)}</div>
+          <div class="metric-sub">${exp > 0 ? `Projected: ${fmtFull(projected)}` : 'No spending yet'}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-lbl">Top Category</div>
+          <div class="metric-val" style="font-size:20px">${topE.length ? getCat(topE[0][0]).l : '—'}</div>
+          <div class="metric-sub">${topE.length ? fmtFull(topE[0][1]) : 'No data'}</div>
+        </div>
+        <div class="metric">
+          <div class="metric-lbl">Entries</div>
+          <div class="metric-val">${list.length}</div>
+          <div class="metric-sub">${incTxs.length} in · ${expTxs.length} out</div>
+        </div>
+      </div>
+
+      ${topE.length ? `
+        <div class="cat-card">
+          <div class="cat-card-head">Where money went</div>
+          ${topE.map(([id, val]) => {
+            const cat = getCat(id);
+            const max = topE[0][1];
+            const pct = ((val / exp) * 100).toFixed(0);
+            const bar = ((val / max) * 100).toFixed(0);
+            return `
+              <div class="cat-row">
+                <div class="cat-emoji">${cat.e}</div>
+                <div class="cat-info">
+                  <div class="cat-line1">
+                    <div class="cat-name">${cat.l}</div>
+                    <div class="cat-amt">${fmtFull(val)}</div>
+                  </div>
+                  <div class="cat-line2">
+                    <div class="cat-bar"><div class="cat-fill" style="width:${bar}%"></div></div>
+                    <div class="cat-pct">${pct}%</div>
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      ` : ''}
+
+      ${topI.length ? `
+        <div class="cat-card">
+          <div class="cat-card-head">Where money came from</div>
+          ${topI.map(([id, val]) => {
+            const cat = getCat(id);
+            const max = topI[0][1];
+            const pct = ((val / inc) * 100).toFixed(0);
+            const bar = ((val / max) * 100).toFixed(0);
+            return `
+              <div class="cat-row">
+                <div class="cat-emoji">${cat.e}</div>
+                <div class="cat-info">
+                  <div class="cat-line1">
+                    <div class="cat-name">${cat.l}</div>
+                    <div class="cat-amt">${fmtFull(val)}</div>
+                  </div>
+                  <div class="cat-line2">
+                    <div class="cat-bar"><div class="cat-fill income" style="width:${bar}%"></div></div>
+                    <div class="cat-pct">${pct}%</div>
+                  </div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      ` : ''}
+
+      ${!topE.length && !topI.length ? emptyHTML('No insights yet', 'Add some entries to see breakdowns') : ''}
+
+    </div>
+  `;
+}
+
+// ════════════════════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════════════════════
+function renderSettings(c) {
+  c.innerHTML = `
+    <div class="settings">
+
+      <div class="set-group">
+        <div class="set-group-label">General</div>
+        <div class="set-card">
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">App name</div>
+              <div class="set-row-sub">Shown in header</div>
+            </div>
+            <input class="set-input text" type="text" id="sName" value="${cfg.name || ''}" placeholder="Paisa">
+          </div>
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">Currency symbol</div>
+              <div class="set-row-sub">Default ₹</div>
+            </div>
+            <input class="set-input" type="text" id="sCur" value="${cfg.currency || '₹'}" maxlength="3">
+          </div>
+        </div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-label">Balance &amp; Limits</div>
+        <div class="set-card">
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">Opening balance</div>
+              <div class="set-row-sub">Added to each month's net</div>
+            </div>
+            <input class="set-input" type="number" id="sSB" value="${cfg.startBalance || ''}" placeholder="0" inputmode="decimal">
+          </div>
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">Monthly spend limit</div>
+              <div class="set-row-sub">Drives the budget meter</div>
+            </div>
+            <input class="set-input" type="number" id="sLim" value="${cfg.monthlyLimit || ''}" placeholder="0" inputmode="decimal">
+          </div>
+        </div>
+      </div>
+
+      <button class="save-btn" onclick="saveSettings()">Save changes</button>
+
+      <div class="set-group" style="margin-top:24px">
+        <div class="set-group-label">Data</div>
+        <div class="set-card">
+          <div class="set-row action" onclick="exportData()">
+            <div>
+              <div class="set-row-lbl">Export data</div>
+              <div class="set-row-sub">Download as JSON backup</div>
+            </div>
+            <span class="set-chevron">›</span>
+          </div>
+          <div class="set-row action" onclick="importDataPrompt()">
+            <div>
+              <div class="set-row-lbl">Import data</div>
+              <div class="set-row-sub">Restore from JSON file</div>
+            </div>
+            <span class="set-chevron">›</span>
+          </div>
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">Total entries</div>
+              <div class="set-row-sub">Stored locally on device</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;color:var(--ink-2)">${txs.length}</div>
+          </div>
+          <div class="set-row danger action" onclick="clearAll()">
+            <div>
+              <div class="set-row-lbl">Clear all data</div>
+              <div class="set-row-sub">Delete every entry</div>
+            </div>
+            <span class="set-chevron">›</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="set-group" style="margin-top:24px">
+        <div class="set-group-label">About</div>
+        <div class="set-card">
+          <div class="set-row">
+            <div>
+              <div class="set-row-lbl">Paisa</div>
+              <div class="set-row-sub">Offline-first · Saved on this device</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;color:var(--ink-3);font-size:12px">v1.0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>`;
+}
+
+function saveSettings() {
+  cfg.name         = document.getElementById('sName').value.trim() || 'Paisa';
+  cfg.currency     = document.getElementById('sCur').value.trim() || '₹';
+  cfg.startBalance = parseFloat(document.getElementById('sSB').value) || 0;
+  cfg.monthlyLimit = parseFloat(document.getElementById('sLim').value) || 0;
+  persist('paisa_cfg_v3', cfg);
+  haptic();
+  toast('Saved');
+  render();
+}
+
+function clearAll() {
+  if (!confirm('Delete ALL entries?\n\nThis cannot be undone.')) return;
+  txs = [];
+  persist('paisa_txs_v3', txs);
+  toast('All data cleared');
+  render();
+}
+
+function exportData() {
+  const data = { txs, cfg, exported: new Date().toISOString(), version: 'v3' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `paisa-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup downloaded');
+}
+
+function importDataPrompt() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json,application/json';
+  input.onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = (ev) => {
+      try {
+        const d = JSON.parse(ev.target.result);
+        if (d.txs && Array.isArray(d.txs)) {
+          if (confirm(`Import ${d.txs.length} entries?\nThis will replace current data.`)) {
+            txs = d.txs;
+            if (d.cfg) cfg = { ...cfg, ...d.cfg };
+            persist('paisa_txs_v3', txs);
+            persist('paisa_cfg_v3', cfg);
+            toast('Imported successfully');
+            render();
+          }
+        } else {
+          toast('Invalid backup file');
+        }
+      } catch {
+        toast('Could not read file');
+      }
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+// ════════════════════════════════════════════════════════════════
+// SHEET — ADD / EDIT
+// ════════════════════════════════════════════════════════════════
+function openAdd() {
+  cType = 'expense';
+  cCat = 'food';
+  document.getElementById('editId').value = '';
+  document.getElementById('sheetTitle').textContent = 'New Entry';
+  document.getElementById('submitBtn').textContent = 'Add Entry';
+  document.getElementById('fAmt').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fNotes').value = '';
+  document.getElementById('fDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('deleteBtn').style.display = 'none';
+  setType('expense');
+  buildCatGrid();
+  openSheet();
+  setTimeout(() => document.getElementById('fAmt').focus(), 380);
+}
+
+function openEdit(id) {
+  const t = txs.find(x => x.id === id);
+  if (!t) return;
+  cType = t.type;
+  cCat = t.category;
+  document.getElementById('editId').value = id;
+  document.getElementById('sheetTitle').textContent = 'Edit Entry';
+  document.getElementById('submitBtn').textContent = 'Save Changes';
+  document.getElementById('fAmt').value = t.amount;
+  document.getElementById('fDesc').value = t.desc || '';
+  document.getElementById('fNotes').value = t.notes || '';
+  document.getElementById('fDate').value = t.date.slice(0, 10);
+  document.getElementById('deleteBtn').style.display = 'block';
+  setType(t.type);
+  buildCatGrid();
+  openSheet();
+}
+
+function openSheet() {
+  haptic();
+  document.getElementById('scrim').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+}
+
+function closeSheet() {
+  document.getElementById('scrim').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+}
+
+function setType(t) {
+  cType = t;
+  const ind = document.getElementById('typeInd');
+  ind.className = 'type-indicator ' + (t === 'expense' ? 'exp' : 'inc');
+  document.getElementById('pillE').classList.toggle('active', t === 'expense');
+  document.getElementById('pillI').classList.toggle('active', t === 'income');
+  if (t === 'expense' && !EXP.find(c => c.id === cCat)) cCat = 'food';
+  if (t === 'income' && !INC.find(c => c.id === cCat)) cCat = 'salary';
+  buildCatGrid();
+  haptic();
+}
+
+function buildCatGrid() {
+  const list = cType === 'expense' ? EXP : INC;
+  document.getElementById('catGrid').innerHTML = list.map(c => `
+    <div class="cat-pick ${c.id === cCat ? 'selected' : ''}" onclick="pickCat('${c.id}')">
+      <div class="cat-pick-em">${c.e}</div>
+      <div class="cat-pick-lbl">${c.l}</div>
+    </div>`).join('');
+}
+
+function pickCat(id) {
+  cCat = id;
+  buildCatGrid();
+  haptic();
+}
+
+function saveEntry() {
+  const amt = parseFloat(document.getElementById('fAmt').value);
+  const desc = document.getElementById('fDesc').value.trim();
+  const notes = document.getElementById('fNotes').value.trim();
+  const date = document.getElementById('fDate').value;
+  const eid = document.getElementById('editId').value;
+
+  if (!amt || amt <= 0) { document.getElementById('fAmt').focus(); toast('Enter an amount'); return; }
+  if (!desc) { document.getElementById('fDesc').focus(); toast('Add a description'); return; }
+  if (!date) { toast('Select a date'); return; }
+
+  if (eid) {
+    const i = txs.findIndex(t => t.id === eid);
+    if (i !== -1) txs[i] = { ...txs[i], type:cType, amount:amt, desc, notes, category:cCat, date };
+    lastTxId = eid;
+    toast('Updated');
+  } else {
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+    txs.push({ id, type:cType, amount:amt, desc, notes, category:cCat, date });
+    lastTxId = id;
+    toast(cType === 'income' ? 'Income added' : 'Expense added');
+  }
+
+  persist('paisa_txs_v3', txs);
+  haptic();
+  closeSheet();
+
+  // jump to view month of new entry
+  const d = new Date(date);
+  vMonth = d.getMonth();
+  vYear = d.getFullYear();
+  render();
+}
+
+function deleteEntry() {
+  const id = document.getElementById('editId').value;
+  if (!id) return;
+  if (!confirm('Delete this entry?')) return;
+  txs = txs.filter(t => t.id !== id);
+  persist('paisa_txs_v3', txs);
+  haptic();
+  closeSheet();
+  toast('Deleted');
+  render();
+}
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+buildCatGrid();
+render();
+initSegIndicator();
+window.addEventListener('resize', initSegIndicator);
+</script>
+</body>
+</html>
